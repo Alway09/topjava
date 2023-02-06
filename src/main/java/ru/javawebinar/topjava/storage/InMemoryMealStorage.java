@@ -17,7 +17,7 @@ public class InMemoryMealStorage implements MealStorageInterface {
     private AtomicInteger generatedId = new AtomicInteger(0);
 
     @Override
-    public Meal create(Meal meal){
+    public synchronized Meal create(Meal meal){
         try{
             meal.setId(generatedId.incrementAndGet());
             mealMap.putIfAbsent(meal.getId(), meal);
