@@ -29,6 +29,6 @@ public class MealServlet extends HttpServlet {
                         LocalTime.MAX,
                         Config.CALORIES_PER_DAY_LIMIT));
 
-        request.getRequestDispatcher("meals.jsp").forward(request, response);
+        request.getRequestDispatcher("jsp/meals.jsp").forward(request, response);
     }
 }
