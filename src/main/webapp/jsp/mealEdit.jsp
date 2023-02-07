@@ -20,7 +20,7 @@
     </div>
     <div>
         <h3>Calories</h3>
-        <input type="text" name="calories" value="${meal.calories}" size=55">
+        <input type="number" min="0" step="1" name="calories" value="${meal.calories}" size=55">
     </div>
     <button type="submit">Save</button>
     <button type="button" onclick="window.history.back()">Cancel</button>
