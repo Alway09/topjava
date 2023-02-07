@@ -33,15 +33,11 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String id = request.getParameter("id");
-        final String action = request.getParameter("action");
-
-        if (action == null) {
-            forwardToMealsView(request, response);
-            return;
-        }
+        String action = request.getParameter("action");
+        action = action == null ? "" : action;
 
         Meal meal;
+        final String id = request.getParameter("id");
         switch (action) {
             case "delete":
                 storage.delete(Integer.parseInt(id));
@@ -57,7 +53,14 @@ public class MealServlet extends HttpServlet {
                 log.debug("update action");
                 break;
             default:
-                forwardToMealsView(request, response);
+                request.setAttribute("allMeals",
+                        MealsUtil.filteredByStreams(storage.getAll(),
+                                LocalTime.MIN,
+                                LocalTime.MAX,
+                                CALORIES_PER_DAY_LIMIT));
+
+                request.getRequestDispatcher("jsp/meals.jsp").forward(request, response);
+                log.debug("Forward to meals");
                 return;
         }
 
@@ -69,11 +72,12 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        final String id = request.getParameter("id");
 
         Meal meal = new Meal(LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
+
+        final String id = request.getParameter("id");
         if (id.isEmpty()) {
             storage.create(meal);
             log.debug("new meal created");
@@ -85,16 +89,5 @@ public class MealServlet extends HttpServlet {
 
         response.sendRedirect("meals");
         log.debug("redirected to meals");
-    }
-
-    private void forwardToMealsView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("allMeals",
-                MealsUtil.filteredByStreams(storage.getAll(),
-                        LocalTime.MIN,
-                        LocalTime.MAX,
-                        CALORIES_PER_DAY_LIMIT));
-
-        request.getRequestDispatcher("jsp/meals.jsp").forward(request, response);
-        log.debug("Forward to meals");
     }
 }

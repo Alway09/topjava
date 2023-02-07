@@ -2,9 +2,8 @@ package ru.javawebinar.topjava.storage;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +18,7 @@ public class InMemoryMealStorage implements MealStorage {
     private final AtomicInteger generatedId = new AtomicInteger(0);
 
     public InMemoryMealStorage() {
-        for (int i = 0; i < 2; ++i) {
-            create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30 + i, 10, 0), "Завтрак", 500));
-            create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30 + i, 13, 0), "Обед", 1000));
-            create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30 + i, 20, 0), "Ужин", 400));
-        }
-        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 101));
+        MealsUtil.getTestMealList().forEach(this::create);
     }
 
     @Override
@@ -43,9 +37,9 @@ public class InMemoryMealStorage implements MealStorage {
 
     @Override
     public Meal update(Meal meal) {
-        mealMap.replace(meal.getId(), meal);
+        Meal res = mealMap.replace(meal.getId(), meal);
         logToDebug("update", meal.getId());
-        return meal;
+        return res == null ? null : meal;
     }
 
     @Override
