@@ -3,8 +3,11 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -46,17 +49,22 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         Meal meal = repository.get(id);
-        if (meal != null) {
-            return meal.getUserId() == userId ? meal : null;
-        }
-        return null;
+        return (meal != null && meal.getUserId() == userId) ? meal : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
         return repository.values()
                 .stream()
-                .filter(meal -> meal.getUserId().intValue() == userId)
+                .filter(meal -> meal.getUserId() == userId)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Meal> getAllFiltered(LocalDateTime startTime, LocalDateTime endTime, int userId) {
+        return repository.values().stream()
+                .filter(meal -> (meal.getUserId() == userId) && (DateTimeUtil.isBetweenInclusive(meal.getDateTime(), startTime, endTime)))
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }

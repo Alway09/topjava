@@ -3,11 +3,11 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.javawebinar.topjava.model.AbstractNamedEntity;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
-import ru.javawebinar.topjava.util.UsersUtil;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,11 @@ public class InMemoryUserRepository implements UserRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     public InMemoryUserRepository() {
-        UsersUtil.users.forEach(this::save);
+        Arrays.asList(
+                new User("Toyama Tokanawa", "best_racing_team@gmail.com", "185ddfs@FFFD85", Role.ADMIN, Role.USER),
+                new User("John Snow", "john_cold@gmail.com", "13abc28F_2", Role.ADMIN),
+                new User("Geralt of Rivia", "plotva@gmail.com", "Avvd88569_fd", Role.USER)
+        ).forEach(this::save);
     }
 
     @Override
@@ -54,7 +58,7 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getByEmail {}", email);
         return repository.values()
                 .stream()
-                .filter((user -> user.getName().equals(email)))
+                .filter((user -> user.getName().toLowerCase().equals(email.toLowerCase())))
                 .findAny()
                 .orElse(null);
     }
@@ -64,7 +68,7 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getAll");
         return repository.values()
                 .stream()
-                .sorted(Comparator.comparing(AbstractNamedEntity::getName))
+                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
                 .collect(Collectors.toList());
     }
 }
