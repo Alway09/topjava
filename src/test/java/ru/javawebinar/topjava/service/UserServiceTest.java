@@ -14,10 +14,12 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.MatcherUtil.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -26,7 +28,6 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest {
-
     static {
         // Only for postgres driver logging
         // It uses java.util.logging and logged via jul-to-slf4j bridge
@@ -42,8 +43,8 @@ public class UserServiceTest {
         Integer newId = created.getId();
         User newUser = getNew();
         newUser.setId(newId);
-        assertMatch(created, newUser);
-        assertMatch(service.get(newId), newUser);
+        assertMatch(created, newUser, IGNORED_FIELDS);
+        assertMatch(service.get(newId), newUser, IGNORED_FIELDS);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class UserServiceTest {
     @Test
     public void get() {
         User user = service.get(USER_ID);
-        assertMatch(user, UserTestData.user);
+        assertMatch(user, UserTestData.user, IGNORED_FIELDS);
     }
 
     @Test
@@ -77,19 +78,19 @@ public class UserServiceTest {
     @Test
     public void getByEmail() {
         User user = service.getByEmail("admin@gmail.com");
-        assertMatch(user, admin);
+        assertMatch(user, admin, IGNORED_FIELDS);
     }
 
     @Test
     public void update() {
         User updated = getUpdated();
         service.update(updated);
-        assertMatch(service.get(USER_ID), getUpdated());
+        assertMatch(service.get(USER_ID), getUpdated(), IGNORED_FIELDS);
     }
 
     @Test
     public void getAll() {
         List<User> all = service.getAll();
-        assertMatch(all, admin, guest, user);
+        assertMatch(all, Arrays.asList(admin, guest, user) , IGNORED_FIELDS);
     }
 }
