@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.MatcherUtil;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -19,7 +20,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
-import static ru.javawebinar.topjava.MatcherUtil.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -28,6 +28,8 @@ import static ru.javawebinar.topjava.MatcherUtil.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest {
+    private static final MatcherUtil MATCHER = new MatcherUtil("registered", "roles");
+
     static {
         // Only for postgres driver logging
         // It uses java.util.logging and logged via jul-to-slf4j bridge
@@ -43,8 +45,8 @@ public class UserServiceTest {
         Integer newId = created.getId();
         User newUser = getNew();
         newUser.setId(newId);
-        assertMatch(created, newUser, IGNORED_FIELDS);
-        assertMatch(service.get(newId), newUser, IGNORED_FIELDS);
+        MATCHER.assertMatch(created, newUser);
+        MATCHER.assertMatch(service.get(newId), newUser);
     }
 
     @Test
@@ -67,7 +69,7 @@ public class UserServiceTest {
     @Test
     public void get() {
         User user = service.get(USER_ID);
-        assertMatch(user, UserTestData.user, IGNORED_FIELDS);
+        MATCHER.assertMatch(user, UserTestData.user);
     }
 
     @Test
@@ -78,19 +80,19 @@ public class UserServiceTest {
     @Test
     public void getByEmail() {
         User user = service.getByEmail("admin@gmail.com");
-        assertMatch(user, admin, IGNORED_FIELDS);
+        MATCHER.assertMatch(user, admin);
     }
 
     @Test
     public void update() {
         User updated = getUpdated();
         service.update(updated);
-        assertMatch(service.get(USER_ID), getUpdated(), IGNORED_FIELDS);
+        MATCHER.assertMatch(service.get(USER_ID), getUpdated());
     }
 
     @Test
     public void getAll() {
         List<User> all = service.getAll();
-        assertMatch(all, Arrays.asList(admin, guest, user) , IGNORED_FIELDS);
+        MATCHER.assertMatch(all, Arrays.asList(admin, guest, user));
     }
 }

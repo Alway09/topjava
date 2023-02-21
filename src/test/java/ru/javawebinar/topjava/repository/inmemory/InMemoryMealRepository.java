@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @Repository
@@ -30,7 +31,8 @@ public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, InMemoryBaseRepository<Meal>> usersMealsMap = new ConcurrentHashMap<>();
 
     {
-        MealTestData.ALL_MEALS.forEach(meal -> save(meal, USER_ID));
+        MealTestData.userMeals.forEach(meal -> save(meal, USER_ID));
+        MealTestData.adminMeals.forEach(meal -> save(meal, ADMIN_ID));
     }
 
 
