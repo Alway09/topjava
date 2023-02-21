@@ -2,11 +2,11 @@ package ru.javawebinar.topjava;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MatcherUtil {
+public class AssertMatcher {
 
     private final String[] ignoredFields;
 
-    public MatcherUtil(String... ignoredFields) {
+    public AssertMatcher(String... ignoredFields) {
         this.ignoredFields = ignoredFields;
     }
 

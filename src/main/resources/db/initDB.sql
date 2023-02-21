@@ -2,7 +2,6 @@ DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS meals;
 DROP TABLE IF EXISTS users;
 DROP SEQUENCE IF EXISTS global_seq;
-DROP SEQUENCE IF EXISTS meals_unique_user_date_time_idx;
 
 CREATE SEQUENCE global_seq START WITH 100000;
 
