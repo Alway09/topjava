@@ -109,16 +109,12 @@ public class MealServiceTest {
     @Test
     public void getAll() {
         MATCHER.assertMatch(service.getAll(USER_ID), userMeals);
+        MATCHER.assertMatch(service.getAll(ADMIN_ID), adminMeals);
     }
 
     @Test
     public void getAllNotExisted() {
         MATCHER.assertMatch(service.getAll(NOT_FOUND), Collections.emptyList());
-    }
-
-    @Test
-    public void getAllForeign() {
-        MATCHER.assertMatch(service.getAll(ADMIN_ID), Collections.emptyList());
     }
 
     @Test

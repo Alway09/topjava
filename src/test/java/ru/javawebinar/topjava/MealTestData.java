@@ -56,7 +56,7 @@ public class MealTestData {
             "Еда 6 ADMIN", 1000);
     public static final Meal adminMeal7 = new Meal(ALL_MEALS_ID_START + 13,
             LocalDateTime.of(2020, Month.JANUARY, 31, 18, 0),
-            "Еда 6 ADMIN", 1000);
+            "Еда 6 ADMIN", 400);
     public static final Meal adminMeal8 = new Meal(ALL_MEALS_ID_START + 14,
             LocalDateTime.of(2020, Month.JANUARY, 28, 18, 0),
             "Еда 7 ADMIN", 1);
@@ -65,7 +65,7 @@ public class MealTestData {
             userMeal7, userMeal6, userMeal5, userMeal4, userMeal3, userMeal2, userMeal1
     );
     public static final List<Meal> adminMeals = Arrays.asList(
-            adminMeal1, adminMeal2, adminMeal3, adminMeal4, adminMeal5, adminMeal6, adminMeal7, adminMeal8
+            adminMeal7, adminMeal4, adminMeal3, adminMeal2, adminMeal1, adminMeal8, adminMeal6, adminMeal5
     );
 
     public static Meal getNew() {
