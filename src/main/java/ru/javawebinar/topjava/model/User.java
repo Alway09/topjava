@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.model;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.util.CollectionUtils;
 
