@@ -5,8 +5,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
-import org.junit.rules.TestName;
-import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,7 +18,6 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -46,10 +43,10 @@ public class MealServiceTest {
     private static final List<String> testsTimes = new ArrayList<>();
 
     @Rule
-    public final Stopwatch meRule = new Stopwatch() {
+    public final Stopwatch testExecutionTimer = new Stopwatch() {
         @Override
         protected void finished(long nanos, Description description) {
-            String result = String.format("Time for method %s : %d ms", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            String result = String.format("%-25s %d ms", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             log.info(result);
             testsTimes.add(result);
         }
@@ -142,8 +139,7 @@ public class MealServiceTest {
     }
 
     @AfterClass
-    public static void testsFinish(){
-        log.info("----Tests times summary----");
+    public static void testsFinish() {
         testsTimes.forEach(log::info);
     }
 }
