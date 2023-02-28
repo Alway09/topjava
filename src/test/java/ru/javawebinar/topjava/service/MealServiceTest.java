@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
@@ -36,19 +35,18 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@Ignore
 public class MealServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
-    private static final List<String> testsTimes = new ArrayList<>();
+    private static final StringBuilder testsTimes = new StringBuilder("\n---Test timings---");
 
     @Rule
     public final Stopwatch testExecutionTimer = new Stopwatch() {
         @Override
         protected void finished(long nanos, Description description) {
-            String result = String.format("%-25s %d ms", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            String result = String.format("\n%-25s %d ms", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             log.info(result);
-            testsTimes.add(result);
+            testsTimes.append(result);
         }
     };
 
@@ -140,6 +138,6 @@ public class MealServiceTest {
 
     @AfterClass
     public static void testsFinish() {
-        testsTimes.forEach(log::info);
+        log.info(testsTimes.toString());
     }
 }
