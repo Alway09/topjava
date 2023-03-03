@@ -6,14 +6,13 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc
-       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-<!-- Change DB by comment/uncomment property-placeholder -->
+    <!-- Change DB by comment/uncomment property-placeholder -->
 
-    <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
-<!--    <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>-->
+        <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
+    <!--<context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>-->
 
     <!--
         For postgres driver logging
@@ -23,11 +22,14 @@
     <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
         <property name="staticMethod" value="org.slf4j.bridge.SLF4JBridgeHandler.install" />
     </bean>
+
     <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
+
     <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
         <jdbc:script location="${jdbc.initLocation}"/>
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
+
     <!--no pooling-->
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -36,10 +38,12 @@
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
     </bean>
+
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"
           p:packagesToScan="ru.javawebinar.**.model">
         <!--p:persistenceUnitName="persistenceUnit">-->
+
         <property name="jpaPropertyMap">
             <map>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
@@ -47,6 +51,7 @@
                 <!--<entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_AUTO}" value="${hibernate.hbm2ddl.auto}"/>-->
             </map>
         </property>
+
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
                   p:showSql="${jpa.showSql}">
