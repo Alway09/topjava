@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.service;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
@@ -36,6 +37,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         cacheManager.getCache("users").clear();
         if (jpaUtil != null) {
             jpaUtil.clear2ndLevelHibernateCache();
+        } else if (!jdbcProfileIsActive()) {
+            throw new NoSuchBeanDefinitionException(JpaUtil.class);
         }
     }
 
