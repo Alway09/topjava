@@ -16,7 +16,7 @@ import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.TimingRules;
 
-import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
@@ -50,6 +50,6 @@ public abstract class AbstractServiceTest {
     }
 
     protected boolean jdbcProfileIsActive() {
-        return Arrays.asList(env.getActiveProfiles()).contains(Profiles.JDBC);
+        return List.of(env.getActiveProfiles()).contains(Profiles.JDBC);
     }
 }
