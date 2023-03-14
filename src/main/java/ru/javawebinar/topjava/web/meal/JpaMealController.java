@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,21 +22,18 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
 @RequestMapping(value = "/meals")
-public class MealsMvcController extends AbstractMealsController {
-    private static final Logger log = LoggerFactory.getLogger(MealsMvcController.class);
-
-    public MealsMvcController(MealService service) {
+public class JpaMealController extends AbstractMealController {
+    public JpaMealController(MealService service) {
         super(service);
     }
 
     @GetMapping
     public String getAll(Model model) {
-        log.info("getAll");
         model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
-    @GetMapping(value = "/filter")
+    @GetMapping("/filter")
     public String getAllFiltered(HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
@@ -46,49 +41,38 @@ public class MealsMvcController extends AbstractMealsController {
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
 
         request.setAttribute("meals", super.getBetween(startDate, startTime, endDate, endTime));
-        log.info("getAllFiltered startDate - {}, endDate - {}, startTime - {}, endTime - {}", startDate, endDate, startTime, endTime);
         return "meals";
     }
 
     @GetMapping("/delete")
     public String delete(HttpServletRequest request) {
-        int mealId = getId(request);
-        super.delete(mealId);
-        log.info("delete {}", mealId);
+        super.delete(getId(request));
         return "redirect:/meals";
     }
 
     @GetMapping("/create")
     public String create(HttpServletRequest request) {
         request.setAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
-        log.info("get create");
         return "mealForm";
     }
 
     @GetMapping("/update")
     public String update(HttpServletRequest request) {
-        int mealId = getId(request);
-        request.setAttribute("meal", super.get(mealId));
-        log.info("get update {}", mealId);
+        request.setAttribute("meal", super.get(getId(request)));
         return "mealForm";
     }
 
     @PostMapping
     public String updateOrCreate(HttpServletRequest request) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
 
         if (StringUtils.hasLength(request.getParameter("id"))) {
-            int mealId = getId(request);
-            super.update(meal, mealId);
-            log.info("updated {}", mealId);
+            super.update(meal, getId(request));
         } else {
-            Meal createdMeal = super.create(meal);
-            log.info("created {}", createdMeal.id());
+            super.create(meal);
         }
 
         return "redirect:/meals";

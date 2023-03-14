@@ -49,7 +49,7 @@ public abstract class AbstractServiceTest {
         });
     }
 
-    protected boolean jdbcProfileIsActive() {
+    protected boolean isJdbcProfileActive() {
         return List.of(env.getActiveProfiles()).contains(Profiles.JDBC);
     }
 }

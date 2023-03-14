@@ -3,12 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
-<head>
-    <title>Meal</title>
-    <c:set var="baseURL" value="${pageContext.request.contextPath}"/>
-    <link rel="stylesheet" href="${baseURL}/resources/css/style.css">
-    <base href="${baseURL}/"/>
-</head>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
