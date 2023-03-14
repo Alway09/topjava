@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <header>
-    <c:set var="baseURL" value="${pageContext.request.contextPath}"/>
-    <a href="${baseURL}/meals"><spring:message code="app.title"/></a> | <a href="${baseURL}/users"><spring:message
-        code="user.title"/></a> | <a href="${baseURL}"><spring:message code="app.home"/></a>
+    <a href="meals"><spring:message code="app.title"/></a> | <a href="users"><spring:message
+        code="user.title"/></a> | <a href=""><spring:message code="app.home"/></a>
 </header>
