@@ -21,7 +21,7 @@ public class MatcherFactory {
         return new Matcher<>(clazz, fieldsToIgnore);
     }
 
-    public static <T> Matcher<T> usingComparator(Class<T> clazz) {
+    public static <T> Matcher<T> usingFieldByFieldComparator(Class<T> clazz) {
         return new Matcher<>(clazz);
     }
 
