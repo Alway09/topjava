@@ -19,13 +19,28 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
 @RequestMapping("/meals")
-public class JspMealController extends AbstractMealController {
+public class JpaMealController extends AbstractMealController {
 
-    @GetMapping("/delete")
-    public String delete(HttpServletRequest request) {
-        super.delete(getId(request));
-        return "redirect:/meals";
+    /*@Override
+    @GetMapping
+    public List<MealTo> getAll() {
+        return super.getAll();
     }
+
+    @Override
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        super.delete(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void create(@RequestParam String dateTime,
+                       @RequestParam String description,
+                       @RequestParam int calories) {
+        super.create(new Meal(LocalDateTime.parse(dateTime), description, calories));
+    }*/
 
     @GetMapping("/update")
     public String update(HttpServletRequest request, Model model) {
