@@ -34,3 +34,11 @@ $(function () {
         })
     );
 });
+
+function applyFilter() {
+    $.ajax({
+        type: "GET",
+        url: "/profile/meals/filter",
+        data: $("#filter").serialize()
+    }).done(updateTable);
+}
