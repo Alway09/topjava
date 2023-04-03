@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/meals")
-public class JpaMealController extends AbstractMealController {
+public class JspMealController extends AbstractMealController {
     @GetMapping("/update")
     public String update(HttpServletRequest request, Model model) {
         model.addAttribute("meal", super.get(getId(request)));

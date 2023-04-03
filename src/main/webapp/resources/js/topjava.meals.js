@@ -30,18 +30,22 @@ $(function () {
                     "defaultContent": "Delete",
                     "orderable": false
                 }
+            ],
+            "order": [
+                [
+                    0,
+                    "desc"
+                ]
             ]
         })
     );
 });
 
 function applyFilter() {
-    $.get(mealAjaxUrl + "filter", $("#filter").serialize(), function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
+    $.get(mealAjaxUrl + "filter", $("#filter").serialize(), fillTable);
 }
 
 function clearFilter() {
     $("#filter").find(":input").val("");
-    $.get(mealAjaxUrl, "", updateTable);
+    updateTable();
 }
