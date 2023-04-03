@@ -6,8 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,5 +37,17 @@ public class MealUIController extends AbstractMealController {
                        @RequestParam String description,
                        @RequestParam int calories) {
         super.create(new Meal(LocalDateTime.parse(dateTime), description, calories));
+    }
+
+    @GetMapping("/filter")
+    public List<MealTo> getBetween(@RequestParam String startDate,
+                                   @RequestParam String startTime,
+                                   @RequestParam String endDate,
+                                   @RequestParam String endTime) {
+        LocalDate startDateLocal = parseLocalDate(startDate);
+        LocalDate endDateLocal = parseLocalDate(endDate);
+        LocalTime startTimeLocal = parseLocalTime(startTime);
+        LocalTime endTimeLocal = parseLocalTime(endTime);
+        return super.getBetween(startDateLocal, startTimeLocal, endDateLocal, endTimeLocal);
     }
 }

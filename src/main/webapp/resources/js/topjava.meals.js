@@ -1,8 +1,8 @@
-const userAjaxUrl = "profile/meals/";
+const mealAjaxUrl = "profile/meals/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: userAjaxUrl
+    ajaxUrl: mealAjaxUrl
 };
 
 // $(document).ready(function () {
@@ -36,9 +36,12 @@ $(function () {
 });
 
 function applyFilter() {
-    $.ajax({
-        type: "GET",
-        url: "/profile/meals/filter",
-        data: $("#filter").serialize()
-    }).done(updateTable);
+    $.get(mealAjaxUrl + "filter", $("#filter").serialize(), function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+}
+
+function clearFilter() {
+    $("#filter").find(":input").val("");
+    $.get(mealAjaxUrl, "", updateTable);
 }
