@@ -1,17 +1,19 @@
 package ru.javawebinar.topjava.util;
 
 
+import org.slf4j.Logger;
 import org.springframework.core.NestedExceptionUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.validation.BindingResult;
 import ru.javawebinar.topjava.HasId;
+import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.*;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 public class ValidationUtil {
 
@@ -77,11 +79,9 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static ResponseEntity<String> getErrorResponse(BindingResult result) {
-        return ResponseEntity.unprocessableEntity().body(
-                result.getFieldErrors().stream()
-                        .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                        .collect(Collectors.joining("<br>"))
-        );
+    public static ErrorInfo logAndGetDuplicationEmailInfo(Logger log, HttpServletRequest req) {
+        String message = "User with this email already exists";
+        log.warn("{} at request  {}: {}", VALIDATION_ERROR, req.getRequestURL(), message);
+        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, message);
     }
 }

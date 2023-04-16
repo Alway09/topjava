@@ -1,16 +1,23 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 import ru.javawebinar.topjava.to.UserTo;
+import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/profile")
@@ -50,5 +57,17 @@ public class ProfileUIController extends AbstractUserController {
             status.setComplete();
             return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
         }
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ModelAndView duplicateEmailHandler(HttpServletRequest req, DataIntegrityViolationException e) {
+        log.warn("Exception at request " + req.getRequestURL(), e);
+        HttpStatus httpStatus = HttpStatus.CONFLICT;
+        ModelAndView mav = new ModelAndView("exception",
+                Map.of("exception", ValidationUtil.getRootCause(e),
+                        "message", "User with this email already exists",
+                        "status", httpStatus));
+        mav.setStatus(httpStatus);
+        return mav;
     }
 }
