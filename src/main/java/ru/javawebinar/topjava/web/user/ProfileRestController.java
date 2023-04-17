@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.user;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,13 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
-import ru.javawebinar.topjava.util.exception.ErrorInfo;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.logAndGetDuplicationEmailInfo;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @RestController
@@ -56,11 +52,5 @@ public class ProfileRestController extends AbstractUserController {
     @GetMapping("/with-meals")
     public User getWithMeals() {
         return super.getWithMeals(authUserId());
-    }
-
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ErrorInfo duplicationEmailError(HttpServletRequest req) {
-        return logAndGetDuplicationEmailInfo(log, req);
     }
 }

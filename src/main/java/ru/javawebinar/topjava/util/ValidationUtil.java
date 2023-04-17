@@ -1,19 +1,14 @@
 package ru.javawebinar.topjava.util;
 
 
-import org.slf4j.Logger;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.javawebinar.topjava.HasId;
-import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.*;
 import java.util.Set;
-
-import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 public class ValidationUtil {
 
@@ -77,11 +72,5 @@ public class ValidationUtil {
     public static Throwable getRootCause(@NonNull Throwable t) {
         Throwable rootCause = NestedExceptionUtils.getRootCause(t);
         return rootCause != null ? rootCause : t;
-    }
-
-    public static ErrorInfo logAndGetDuplicationEmailInfo(Logger log, HttpServletRequest req) {
-        String message = "User with this email already exists";
-        log.warn("{} at request  {}: {}", VALIDATION_ERROR, req.getRequestURL(), message);
-        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, message);
     }
 }
